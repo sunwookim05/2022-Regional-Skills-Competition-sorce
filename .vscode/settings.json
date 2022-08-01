@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "control_hardware.h": "c",
+        "lcd1602.h": "c"
+    }
+}
