@@ -68,7 +68,6 @@ ADC_HandleTypeDef hadc;
 TIM_HandleTypeDef htim6;
 /* USER CODE BEGIN PV */
 int temp = 20, fire = 0, fireset = 0, altemp = 20, autemp = 80;
-String bf;
 boolean ledRingFlag = false;
 Statflag stat;
 gstat gasstat = OFF;
@@ -110,7 +109,7 @@ void read_adc(uint16_t *cds, uint16_t *vr) {
 void lcd_print() {
 	String statfont[6] = { "OVER HEAT", "SAFE LOCK", "OFF      ", "ON(NONE) ",
 		"AUTO ADJ ", "ON       " };
-	bf = (char *)malloc(sizeof(char) * 16);
+	String bf = (char *)malloc(sizeof(char) * 16);
 	if (stat.over)
 		gasstat = OVER;
 	else if (stat.safe)
