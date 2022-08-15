@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <stdlib.h>
 #include "lcd1602.h"
 #include "control_hardware.h"
 /* USER CODE END Includes */
@@ -67,7 +68,7 @@ ADC_HandleTypeDef hadc;
 TIM_HandleTypeDef htim6;
 /* USER CODE BEGIN PV */
 int temp = 20, fire = 0, fireset = 0, altemp = 20, autemp = 80;
-char bf[17];
+String bf;
 boolean ledRingFlag = false;
 Statflag stat;
 String statfont[6] = { "OVER HEAT", "SAFE LOCK", "OFF      ", "ON(NONE) ",
@@ -109,6 +110,7 @@ void read_adc(uint16_t *cds, uint16_t *vr) {
 }
 
 void lcd_print() {
+	bf = (char *)malloc(sizeof(char) * 17);
 	if (stat.over)
 		gasstat = OVER;
 	else if (stat.safe)
@@ -127,6 +129,7 @@ void lcd_print() {
 	sprintf(bf, "[%.9s][%03d]", statfont[gasstat], altemp);
 	lcd_gotoxy(0, 0);
 	lcd_puts(bf);
+	free(bf);
 }
 
 void led(uint16_t vr) {
