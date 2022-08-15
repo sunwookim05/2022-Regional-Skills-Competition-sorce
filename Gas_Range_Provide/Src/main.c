@@ -71,8 +71,6 @@ int temp = 20, fire = 0, fireset = 0, altemp = 20, autemp = 80;
 String bf;
 boolean ledRingFlag = false;
 Statflag stat;
-String statfont[6] = { "OVER HEAT", "SAFE LOCK", "OFF      ", "ON(NONE) ",
-		"AUTO ADJ ", "ON       " };
 gstat gasstat = OFF;
 uint32_t led_ring_data[10][12] = {
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -110,7 +108,9 @@ void read_adc(uint16_t *cds, uint16_t *vr) {
 }
 
 void lcd_print() {
-	bf = (char *)malloc(sizeof(char) * 17);
+	String statfont[6] = { "OVER HEAT", "SAFE LOCK", "OFF      ", "ON(NONE) ",
+		"AUTO ADJ ", "ON       " };
+	bf = (char *)malloc(sizeof(char) * 16);
 	if (stat.over)
 		gasstat = OVER;
 	else if (stat.safe)
