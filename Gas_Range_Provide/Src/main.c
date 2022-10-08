@@ -56,7 +56,7 @@ typedef struct {
 #define TEMPUP(X) (X == 1 ? 900 : X == 2 ? 800 : X == 3 ? 700 : X == 4 ? 600 : X == 5 ? 500 : X == 6 ? 400 : X == 7 ? 300 : X == 8 ? 200 : X == 9 ? 100 : 0)
 #define TEMPDOWN(X) (X < 10 ? 2900 : X >= 300 ? 100 : X >= 200 ? 200 : X >= 100 ? 400 : X >= 40 ? 700 : X >= 20 ? 1100 : X >= 15 ? 1600 : X >= 10 ? 2200 : 0)
 #define LEDCLEAR LED(1, false); LED(2, false); LED(3, false); LED(4, false); LED(5, false);
-/* USER CODE END PD */`
+/* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
@@ -109,7 +109,7 @@ void read_adc(uint16_t *cds, uint16_t *vr) {
 void lcd_print() {
 	String statfont[6] = { "OVER HEAT", "SAFE LOCK", "OFF      ", "ON(NONE) ",
 		"AUTO ADJ ", "ON       " };
-	String bf = (char *)malloc(sizeof(char) * 16);
+	String bf = (String)malloc(sizeof(char) * 16);
 	if (stat.over)
 		gasstat = OVER;
 	else if (stat.safe)
@@ -322,15 +322,12 @@ int main(void) {
 			alflag = false;
 		}
 		if (buzflag) {
-			if ((NOW(buzlast) >= 100 && NOW(buzlast) <= 200)
-					|| NOW(buzlast) >= 300 && NOW(buzlast) <= 400)
-					|| (NOW(buzlast) >= 500 && NOW(buzlast) <= 600))
+			if ((NOW(buzlast) >= 100 && NOW(buzlast) <= 200) || (NOW(buzlast) >= 300 && NOW(buzlast) <= 400) || (NOW(buzlast) >= 500 && NOW(buzlast) <= 600))
 				BUZZER(true);
 			else
 				BUZZER(false);
 		} else if (alflag) {
-			if ((NOW(buzlast) >= 0 && NOW(buzlast) <= 100)
-					|| (NOW(buzlast) >= 200 && NOW(buzlast) <= 300))
+			if ((NOW(buzlast) >= 0 && NOW(buzlast) <= 100) || (NOW(buzlast) >= 200 && NOW(buzlast) <= 300))
 				BUZZER(true);
 			else
 				BUZZER(false);
