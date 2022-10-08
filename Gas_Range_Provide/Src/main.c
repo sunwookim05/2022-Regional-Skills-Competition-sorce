@@ -45,14 +45,14 @@ typedef struct {
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SW1 HAL_GPIO_ReadPin(SW_ON_GPIO_Port, SW_ON_Pin)
-#define SW2 HAL_GPIO_ReadPin(SW_AUTO_GPIO_Port, SW_LOCK_Pin)
+#define SW1 HAL_GPIO_ReadPin(SW_ON_GPIO_Port, SW_ON_Pin) 
+#define SW2 HAL_GPIO_ReadPin(SW_AUTO_GPIO_Port, SW_LOCK_Pin) 
 #define SW3 HAL_GPIO_ReadPin(SW_AUTO_GPIO_Port, SW_AUTO_Pin)
 #define SW4 HAL_GPIO_ReadPin(SW_A_GPIO_Port, SW_A_Pin)
-#define SW5 HAL_GPIO_ReadPin(SW_B_GPIO_Port, SW_B_Pin)
+#define SW5 HAL_GPIO_ReadPin(SW_B_GPIO_Port, SW_B_Pin) 
 #define BUZZER(X) HAL_GPIO_WritePin(BUZZ_GPIO_Port, BUZZ_Pin, X)
-#define LED(N, X) HAL_GPIO_WritePin(LED##N##_GPIO_Port, LED##N##_Pin, !X)
-#define NOW(X) (HAL_GetTick() - X)
+#define LED(N, X) HAL_GPIO_WritePin(LED##N##_GPIO_Port, LED##N##_Pin, !X) 
+#define NOW(X) (HAL_GetTick() - X) // 현재시간에 X 를 뺸 값 을 정의한다.
 #define TEMPUP(X) (X == 1 ? 900 : X == 2 ? 800 : X == 3 ? 700 : X == 4 ? 600 : X == 5 ? 500 : X == 6 ? 400 : X == 7 ? 300 : X == 8 ? 200 : X == 9 ? 100 : 0)
 #define TEMPDOWN(X) (X < 10 ? 2900 : X >= 300 ? 100 : X >= 200 ? 200 : X >= 100 ? 400 : X >= 40 ? 700 : X >= 20 ? 1100 : X >= 15 ? 1600 : X >= 10 ? 2200 : 0)
 #define LEDCLEAR LED(1, false); LED(2, false); LED(3, false); LED(4, false); LED(5, false);
@@ -67,11 +67,11 @@ typedef struct {
 ADC_HandleTypeDef hadc;
 TIM_HandleTypeDef htim6;
 /* USER CODE BEGIN PV */
-int temp = 20, fire = 0, fireset = 0, altemp = 20, autemp = 80;
-boolean ledRingFlag = false;
-Statflag stat;
-gstat gasstat = OFF;
-uint32_t led_ring_data[10][12] = {
+int temp = 20, fire = 0, fireset = 0, altemp = 20, autemp = 80;// 온도와 불의 세기, 알람온도, 오토모드일때의 최대 온도 설정치를 정의한다.
+boolean ledRingFlag = false;// LEDRing을켜고 끄는 역할을 하는 변수이다.
+Statflag stat;// 스텟을 정의한다.
+gstat gasstat = OFF;// 가스레인지의 상태를 정의한다.
+uint32_t led_ring_data[10][12] = { //LEDRing 의 데이터를 배열안에 저장한다 (0xFF 이런식으로도 가능)
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 13, 0, 0,0, 13, 0, 0, 0, 13, 0, 0, 0 },
 		{ 76, 0, 0, 0, 76, 0, 0, 0, 76, 0, 0, 0 },
@@ -106,7 +106,7 @@ void read_adc(uint16_t *cds, uint16_t *vr) {
 	HAL_ADC_Stop(&hadc);
 }
 
-void lcd_print() {
+void lcd_print() {// LCD에 온도와 불의 세기를 출력한다.
 	String statfont[6] = { "OVER HEAT", "SAFE LOCK", "OFF      ", "ON(NONE) ",
 		"AUTO ADJ ", "ON       " };
 	String bf = (String)malloc(sizeof(char) * 16);
@@ -148,15 +148,15 @@ typedef struct _IO{
 
 }IOcon;
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim->Instance == htim6.Instance && ledRingFlag) {
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) { 
+	if (htim->Instance == htim6.Instance && ledRingFlag) { 
 		ledRingFlag = false;
 		led_ring_update(led_ring_data[fire]);
 	}
 }
 
-void setUp(IOcon *io){
-	io->Lcd_Print = lcd_print;
+void setUp(IOcon *io){ 
+	io->Lcd_Print = lcd_print; 
 	io->Led = led;
 	io->Read_ADC = read_adc;
 }
@@ -169,13 +169,13 @@ void setUp(IOcon *io){
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
-	IOcon io;
-	boolean swFlag = false, buzflag = false, alflag = false;
-	uint16_t cds, vr;
-	uint32_t last = NOW(0);
-	uint32_t flast = NOW(0);
-	uint32_t tuplast = NOW(0);
-	uint32_t tdownlast = NOW(0);
+	IOcon io; 
+	boolean swFlag = false, buzflag = false, alflag = false; 
+	uint16_t cds, vr; 
+	uint32_t last = NOW(0); 
+	uint32_t flast = NOW(0); 
+	uint32_t tuplast = NOW(0); 
+	uint32_t tdownlast = NOW(0); 
 	uint32_t buzlast = NOW(0);
 	/* USER CODE END 1 */
 
@@ -205,12 +205,12 @@ int main(void) {
 	setUp(&io);
 	/* USER CODE BEGIN 2 */
 	LcdInit();
-	lcd_cgram(1, 0);
-	lcd_puts("\fSmart Gas Range\n             001");
+	lcd_cgram(1, 0); 
+	lcd_puts("\fSmart Gas Range\n             001"); 
 	HAL_Delay(2000);
 	HAL_TIM_Base_Start_IT(&htim6);
 	ledRingFlag = true;
-	io.Lcd_Print();
+	io.Lcd_Print(); 
 
 	/* USER CODE END 2 */
 
@@ -222,119 +222,119 @@ int main(void) {
 		/* USER CODE BEGIN 3 */
 		io.Read_ADC(&cds, &vr);
 		if (!SW2)
-			stat.safe = true;
-		else {
-			if (!SW1) {
-				if (cds > 3000) {
-					stat.on = true;
-					stat.onn = false;
-				} else {
-					stat.onn = true;
-					stat.on = false;
+			stat.safe = true; 
+		else { 
+			if (!SW1) { 
+				if (cds > 3000) { 
+					stat.on = true; 
+					stat.onn = false; 
+				} else { 
+					stat.onn = true; 
+					stat.on = false; 
 				}
-				stat.off = false;
+				stat.off = false; 
 			} else {
-				if (temp < 150) {
+				if (temp < 150) { 
 					stat.over = false;
 					buzflag = false;
 				}
-				stat.safe = false;
-				stat.onn = false;
+				stat.safe = false; 
+				stat.onn = false; 
 				stat.on = false;
 				stat.off = true;
 			}
 		}
 		if (stat.off || stat.over || stat.safe) {
-			fireset = 0;
-			LEDCLEAR
-		} else if (stat.onn) {
-			LEDCLEAR
-			fireset = 1;
+			fireset = 0; 
+			LEDCLEAR;
+		} else if (stat.onn) { 
+			LEDCLEAR; 
+			fireset = 1; 
 		} else if (stat.au && !stat.onn && cds > 3000) {
-			io.Led(vr);
-			if (1 < autemp - temp)
+			io.Led(vr); 
+			if (1 < autemp - temp) 
 				fireset = 9;
-			if (autemp - temp < -1)
-				fireset = 1;
-		} else if (stat.on) {
-			LEDCLEAR
-			fireset = vr / 511.875 + 1;
+			if (autemp - temp < -1) 
+				fireset = 1; 
+		} else if (stat.on) { 
+			LEDCLEAR; 
+			fireset = vr / 511.875 + 1; 
 		}
-		if (!SW3 || !SW4 || !SW5) {
-			if (!swFlag) {
+		if (!SW3 || !SW4 || !SW5) { 
+			if (!swFlag) { 
 				if (!SW3)
-					stat.au = (!stat.au ? true : false);
-				if (!SW4)
+					stat.au = (!stat.au ? true : false); 
+				if (!SW4) 
 					altemp -= 20;
 				if (!SW5)
-					altemp += 20;
-				if (altemp > 280)
-					altemp = 280;
-				if (altemp < 20)
-					altemp = 20;
+					altemp += 20; 
+				if (altemp > 280) 
+					altemp = 280; 
+				if (altemp < 20) 
+					altemp = 20; 
 			}
-			swFlag = true;
-		} else {
-			swFlag = false;
-		}
+			swFlag = true; 
+		} else { 
+			swFlag = false; 
+		} 
 		if (NOW(last) >= 10) {
 			if (NOW(flast) >= 100) {
-				if (fire < fireset) {
-					fire++;
-					io.Lcd_Print();
-					ledRingFlag = true;
+				if (fire < fireset) { 
+					fire++; 
+					io.Lcd_Print(); 
+					ledRingFlag = true; 
 				}
 				if (fire > fireset) {
-					fire--;
-					io.Lcd_Print();
-					ledRingFlag = true;
+					fire--; 
+					io.Lcd_Print(); 
+					ledRingFlag = true; 
 				}
-				flast = NOW(0);
+				flast = NOW(0); 
 			}
-			last = NOW(0);
+			last = NOW(0); 
 		}
 		if (NOW(tuplast)>= TEMPUP(fire) && TEMPUP(fire) != 0) {
-			temp++;
-			tuplast = NOW(0);
-			if (temp > 300)
-				stat.over = true;
-			io.Lcd_Print();
+			temp++; 
+			tuplast = NOW(0); 
+			if (temp > 300) 
+				stat.over = true; 
+			io.Lcd_Print(); 
 		}
-		if (NOW(tdownlast) >= TEMPDOWN(temp - 20)
-				&& TEMPDOWN(temp - 20) != 0) {
+		if (NOW(tdownlast) >= TEMPDOWN(temp - 20) && TEMPDOWN(temp - 20) != 0) { 
 			temp--;
-			if (temp < 20)
+			if (temp < 20) 
 				temp = 20;
 			tdownlast = NOW(0);
-			io.Lcd_Print();
+			io.Lcd_Print(); 
 		}
-		if (!buzflag && stat.over) {
-			buzlast = NOW(0);
-			buzflag = true;
+		if (!buzflag && stat.over) { 
+			buzlast = NOW(0); 
+			buzflag = true; 
 		}
 		if (altemp < temp && altemp > 20) {
-			if (!alflag) {
-				buzlast = NOW(0);
-				alflag = true;
+			if (!alflag) { 
+				buzlast = NOW(0); 
+				alflag = true; 
 			}
-		} else {
+		} else { 
 			BUZZER(false);
-			alflag = false;
+			alflag = false; 
 		}
-		if (buzflag) {
-			if ((NOW(buzlast) >= 100 && NOW(buzlast) <= 200) || (NOW(buzlast) >= 300 && NOW(buzlast) <= 400) || (NOW(buzlast) >= 500 && NOW(buzlast) <= 600))
+		if (buzflag) { 
+			if ((NOW(buzlast) >= 100 && NOW(buzlast) <= 200) || (NOW(buzlast) >= 300 && NOW(buzlast) <= 400) || (NOW(buzlast) >= 500 && NOW(buzlast) <= 600)) // 부저 시간이 100~200, 300~400, 500~600이면
+				BUZZER(true); 
+			else 
+				BUZZER(false); 
+		} else if (alflag) { 
+			if ((NOW(buzlast) >= 0 && NOW(buzlast) <= 100)
+					|| (NOW(buzlast) >= 200 && NOW(buzlast) <= 300))
 				BUZZER(true);
 			else
-				BUZZER(false);
-		} else if (alflag) {
-			if ((NOW(buzlast) >= 0 && NOW(buzlast) <= 100) || (NOW(buzlast) >= 200 && NOW(buzlast) <= 300))
-				BUZZER(true);
-			else
-				BUZZER(false);
-			if (NOW(buzlast) >= 1000)
-				buzlast = NOW(0);
+				BUZZER(false); 
+			if (NOW(buzlast) >= 1000) 
+				buzlast = NOW(0); 
 		}
-		io.Lcd_Print();
+		io.Lcd_Print(); // LCD를 출력한다.
 	}
 	/* USER CODE END 3 */
 }
